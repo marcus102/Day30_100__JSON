@@ -19,13 +19,15 @@ def generate_password():
   password_symbols = [choice(symbols) for _ in range(randint(2, 4))]
   password_numbers = [choice(numbers) for _ in range(randint(2, 4))]
   password_list = password_letters + password_symbols + password_numbers
+  
+  if len(website_input.get()) != 0:
+    shuffle(password_list)
+    password = ''.join(password_list)
 
-  shuffle(password_list)
-
-  password = ''.join(password_list)
-
-  password_input.insert( 0, password)
-  pyperclip.copy(password)
+    password_input.insert( 0, password)
+    pyperclip.copy(password)
+  else:
+    messagebox.showerror(title='Error!', message='Your website field is empty!')
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 
@@ -44,14 +46,17 @@ def search_data():
       website_input.delete(0, END)
       website_input.focus()
     else:
-      is_ok = messagebox.askokcancel(title='Website not found!', message=f"{website_input.get()} does't exist!\nDo you want to add it?")
-      if is_ok:
-        generate_password()
-        save_infos()
-        messagebox.showinfo(title='Message', message='Added Successfuly!')
+      if len(website_input.get()) != 0:
+        is_ok = messagebox.askokcancel(title='Website not found!', message=f"{website_input.get()} does't exist!\nDo you want to add it?")
+        if is_ok:
+          generate_password()
+          save_infos()
+          messagebox.showinfo(title='Message', message='Added Successfuly!')
+        else:
+          website_input.delete(0, END)
+          website_input.focus()
       else:
-        website_input.delete(0, END)
-        website_input.focus()
+        messagebox.showwarning(title='Error!', message='Empty Input! Please  enter the Website name you want to search')
   
           
 def save_infos():
@@ -64,7 +69,7 @@ def save_infos():
   }
   
   if len(website_input.get()) == 0 or len(password_input.get()) == 0:
-    messagebox.showwarning(title='Error!', message='Empty Input!\nmake sure to fill the form')
+    messagebox.showwarning(title='Error!', message='Empty Input! make sure to fill all the forms')
   else:
     # is_ok = messagebox.askokcancel(title=website_input.get(), message=f'These are the details entered: \n Email: {username_input.get()}\n Password: {password_input.get()}\n Would you like to save it?')
     # if is_ok:
